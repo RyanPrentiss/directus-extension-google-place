@@ -1,0 +1,59 @@
+{
+    "name": "@rockdog/directus-extension-google-place",
+    "description": "A Directus extension to fetch Google Places data",
+    "icon": "extension",
+    "version": "0.0.0-development",
+    "author": {
+        "name": "Rock Dog Studios",
+        "email": "info@rockdog.studio"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/RyanPrentiss/directus-extension-google-place.git"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "license": "MIT",
+    "keywords": [
+        "directus",
+        "directus-extension",
+        "directus-custom-endpoint"
+    ],
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "directus:extension": {
+        "type": "endpoint",
+        "path": "dist/index.js",
+        "source": "src/index.ts",
+        "host": "^10.3.1"
+    },
+    "scripts": {
+        "build": "directus-extension build",
+        "dev": "directus-extension build -w --no-minify",
+        "link": "directus-extension link"
+    },
+    "devDependencies": {
+        "@directus/env": "^5.0.2",
+        "@directus/extensions-sdk": "^13.0.3",
+        "@types/node": "^22.13.7",
+        "cz-conventional-changelog": "^3.3.0",
+        "semantic-release": "^24.2.3",
+        "typescript": "^5.8.2"
+    },
+    "dependencies": {
+        "redis": "^4.7.0"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
+    },
+    "release": {
+        "branches": [
+            "master"
+        ]
+    }
+}
