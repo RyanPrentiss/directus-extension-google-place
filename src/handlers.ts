@@ -1,34 +1,30 @@
 import { useEnv } from '@directus/env'
 import { Request, Response } from 'express'
 import { createClient } from 'redis'
+import { z } from 'zod'
 
 const env = useEnv()
 
-const redisUrl = env.REDIS ||
-    (env.REDIS_HOST && env.REDIS_PORT && env.REDIS_USERNAME && env.REDIS_PASSWORD
+// Validate Redis connection
+const redisUrl = env.REDIS || (
+    env.REDIS_HOST && env.REDIS_PORT && env.REDIS_USERNAME && env.REDIS_PASSWORD
         ? `redis://${env.REDIS_USERNAME}:${env.REDIS_PASSWORD}@${env.REDIS_HOST}:${env.REDIS_PORT}`
-        : null)
+        : null
+)
+
 if (!redisUrl) {
-    throw new Error(
-        'Missing Redis configuration. Either REDIS or REDIS_HOST, REDIS_PORT, REDIS_USERNAME, and REDIS_PASSWORD must be provided.'
-    )
+    throw new Error('Missing Redis configuration. Either REDIS or REDIS_HOST, REDIS_PORT, REDIS_USERNAME, and REDIS_PASSWORD must be provided.')
 }
 
-const getEnvVar = (key: string): string => {
-    const value = env[key]
-    if (typeof value !== 'string') {
-        throw new Error(`Missing or invalid environment variable: ${key}`)
-    }
-    return value
-}
+// Create and validate the config object directly
 const config: RDSConfig = {
     cache: {
-        hours: Number(getEnvVar('REDIS_DGPE_CACHE_HOURS')),
-        key: getEnvVar('REDIS_DGPE_CACHE_KEY')
+        hours: z.number().parse(env.REDIS_DGPE_CACHE_HOURS),
+        key: z.string().parse(env.REDIS_DGPE_CACHE_KEY)
     },
     google: {
-        apiKey: getEnvVar('GOOGLE_API_KEY'),
-        placeId: getEnvVar('GOOGLE_PLACE_ID')
+        apiKey: z.string().parse(env.GOOGLE_API_KEY),
+        placeId: z.string().parse(env.GOOGLE_PLACE_ID)
     }
 }
 
