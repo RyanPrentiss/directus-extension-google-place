@@ -1,5 +1,5 @@
 import { useEnv } from '@directus/env'
-import { defineEndpoint } from '@directus/extensions'
+import { Router } from 'express'
 import { createClient } from "redis"
 import { RDSGooglePlace } from './handlers.js'
 
@@ -22,8 +22,16 @@ await RC.connect()
 
 const GP = new RDSGooglePlace()
 
-export default defineEndpoint((router) => {
-    router.get('/', GP.get)
+// export default defineEndpoint((router) => {
+//     router.get('/', GP.get)
 
-    router.get('/health', (_req, res) => res.sendStatus(200))
-})
+//     router.get('/health', (_req, res) => res.sendStatus(200))
+// })
+
+export default {
+    id: 'google-place',
+    handler: (router: Router) => {
+        router.get('/', GP.get)
+        router.get('/health', (_req, res) => res.sendStatus(200))
+    },
+}
